@@ -26,6 +26,7 @@
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             text-align: center;
+            position: relative; /* Tooltip পজিশনের জন্য */
         }
         .profile-picture {
             width: 150px;
@@ -45,8 +46,10 @@
             color: #606770;
             margin-bottom: 30px;
         }
-        .social-links a {
-            display: block;
+        .social-links a, .social-links .uid-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
             background-color: #e7f3ff;
             color: #1877f2;
             padding: 15px;
@@ -56,24 +59,61 @@
             font-size: 1.1em;
             font-weight: 600;
             transition: transform 0.2s, background-color 0.2s;
+            position: relative;
         }
-        .social-links a:hover {
+        .social-links a:hover, .social-links .uid-container:hover {
             transform: scale(1.05);
-            background-color: #dbeaff;
         }
         .social-links i {
             margin-right: 12px;
         }
-        /* Specific colors for links */
+        /* Specific colors */
         .facebook { background-color: #e7f3ff; color: #1877f2; }
+        .youtube { background-color: #ffebee; color: #ff0000; }
         .whatsapp { background-color: #e0f8e9; color: #25d366; }
         .telegram { background-color: #e3f2fd; color: #0088cc; }
+        .freefire { background-color: #fff0e6; color: #ff6f00; justify-content: space-between; }
         .mobile { background-color: #f0f0f0; color: #333; }
         
+        /* Hover colors */
         .facebook:hover { background-color: #dbeaff; }
+        .youtube:hover { background-color: #ffcdd2; }
         .whatsapp:hover { background-color: #d0f4dc; }
         .telegram:hover { background-color: #d1e9f9; }
+        .freefire:hover { background-color: #ffebd7; }
         .mobile:hover { background-color: #e0e0e0; }
+
+        .copy-icon {
+            cursor: pointer;
+            margin-left: 15px;
+            font-size: 1em;
+            padding: 5px; /* ক্লিক করার জন্য এলাকা বাড়াতে */
+        }
+         .copy-icon:hover {
+            opacity: 0.7;
+        }
+
+        /* Tooltip স্টাইল */
+        .tooltip {
+            visibility: hidden;
+            width: 140px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 0;
+            position: absolute;
+            z-index: 1;
+            bottom: 110%; /* বাটনের উপরে দেখানোর জন্য */
+            left: 50%;
+            margin-left: -70px; /* অর্ধেক चौड़ाई বাদ দিয়ে সেন্টারে আনতে */
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .tooltip.show {
+            visibility: visible;
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -89,20 +129,54 @@
             <a href="https://www.facebook.com/profile.php?id=61582034830085" target="_blank" class="facebook">
                 <i class="fab fa-facebook-f"></i>Facebook
             </a>
+            <a href="https://www.youtube.com/@developersiampro" target="_blank" class="youtube">
+                <i class="fab fa-youtube"></i>Developer Siam Pro
+            </a>
             <a href="https://wa.me/8801329063557" target="_blank" class="whatsapp">
                 <i class="fab fa-whatsapp"></i>WhatsApp
             </a>
             <a href="https://t.me/siam_islam_69" target="_blank" class="telegram">
                 <i class="fab fa-telegram-plane"></i>Telegram
             </a>
+            <!-- Free Fire UID Section -->
+            <div class="uid-container freefire">
+                <span>
+                    <i class="fas fa-gamepad"></i>UID: <span id="ff-uid">2763305131</span>
+                </span>
+                <i class="fas fa-copy copy-icon" onclick="copyUID(this)" title="Copy UID"></i>
+                <div class="tooltip" id="copyTooltip">UID Copied!</div>
+            </div>
             <a href="tel:+8801329063557" class="mobile">
                 <i class="fas fa-phone-alt"></i>Mobile
-            </a>
-            <a href="https://t.me/premiumfiledownload_bot" target="_blank" class="telegram">
-                <i class="fab fa-telegram-plane"></i>Premium File Download
             </a>
         </div>
     </div>
 
+<script>
+    function copyUID(element) {
+        const uidText = document.getElementById('ff-uid').innerText;
+        
+        // ফলব্যাক পদ্ধতি (সব পরিবেশে কাজ করবে)
+        const textArea = document.createElement("textarea");
+        textArea.value = uidText;
+        // এলিমেন্টটিকে স্ক্রিনের বাইরে রাখা
+        textArea.style.position = "absolute";
+        textArea.style.left = "-9999px";
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand("copy"); // টেক্সট কপি করা
+        document.body.removeChild(textArea);
+
+        // ব্যবহারকারীকে ফিডব্যাক দেওয়া
+        const tooltip = element.nextElementSibling; // .copy-icon এর পরের এলিমেন্ট হলো tooltip
+        tooltip.classList.add('show');
+
+        // ১.৫ সেকেন্ড পর টুলটিপটি লুকিয়ে ফেলা
+        setTimeout(() => {
+            tooltip.classList.remove('show');
+        }, 1500);
+    }
+</script>
+
 </body>
-                </html>
+</html>
